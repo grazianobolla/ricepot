@@ -35,10 +35,10 @@ public partial class CustomSpawner : MultiplayerSpawner
         if (id == Multiplayer.GetUniqueId())
         {
             GD.Print("Spawned client player");
-            Node player = _playerScene.Instantiate();
+            ClientPlayer player = _playerScene.Instantiate() as ClientPlayer;
             player.Name = id.ToString();
             player.SetMultiplayerAuthority(id);
-            LocalPlayer = player as ClientPlayer;
+            LocalPlayer = player;
             return player;
         }
 

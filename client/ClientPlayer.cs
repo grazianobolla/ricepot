@@ -11,6 +11,17 @@ public partial class ClientPlayer : CharacterBody3D
     private List<NetMessage.UserInput> _userInputs = new();
     private int _seqStamp = 0;
 
+    private WeaponManager _weaponManager;
+    private Node3D _rotationHelper;
+
+    public override void _Ready()
+    {
+        _rotationHelper = GetNode<Node3D>("RotationHelper");
+        _weaponManager = GetNode<WeaponManager>("WeaponManager");
+
+        _weaponManager.WeaponAction += OnWeaponAction;
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         var userInput = GenerateUserInput();
@@ -18,6 +29,23 @@ public partial class ClientPlayer : CharacterBody3D
         SendInputs();
         MoveLocally(userInput);
         _seqStamp++;
+    }
+
+    private void OnWeaponAction(byte weaponIndex, NetMessage.WeaponFlags action)
+    {
+        var weaponCmd = new WeaponCommand
+        {
+            Id = Multiplayer.GetUniqueId(),
+            WeaponIndex = weaponIndex,
+            WeaponAction = (byte)action
+        };
+
+        var data = MessagePackSerializer.Serialize<NetMessage.ICommand>(weaponCmd);
+
+        (Multiplayer as SceneMultiplayer).SendBytes(data, 1,
+            MultiplayerPeer.TransferModeEnum.Reliable, 2);
+
+        GD.Print("Sending weapon cmd");
     }
 
     public void ReceiveState(NetMessage.UserState state)
@@ -31,13 +59,15 @@ public partial class ClientPlayer : CharacterBody3D
 
         foreach (var userInput in _userInputs)
         {
-            expectedVelocity = PlayerMovement.ComputeMotion(
+            expectedVelocity = Movement.ComputeMotion(
                 this.GetRid(),
                 expectedTransform,
                 expectedVelocity,
-                PlayerMovement.InputToDirection(userInput.Keys));
+                Movement.InputToDirection(userInput.Keys),
+                userInput.LateralLookAngle,
+                Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift));
 
-            expectedTransform.Origin += expectedVelocity * (float)PlayerMovement.FRAME_DELTA;
+            expectedTransform.Origin += expectedVelocity * (float)Movement.FRAME_DELTA;
         }
 
         var deviation = expectedTransform.Origin - Position;
@@ -73,13 +103,15 @@ public partial class ClientPlayer : CharacterBody3D
 
     private void MoveLocally(NetMessage.UserInput userInput)
     {
-        this.Velocity = PlayerMovement.ComputeMotion(
+        this.Velocity = Movement.ComputeMotion(
             this.GetRid(),
             this.GlobalTransform,
             this.Velocity,
-            PlayerMovement.InputToDirection(userInput.Keys));
+            Movement.InputToDirection(userInput.Keys),
+            userInput.LateralLookAngle,
+            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift));
 
-        Position += this.Velocity * (float)PlayerMovement.FRAME_DELTA;
+        Position += this.Velocity * (float)Movement.FRAME_DELTA;
     }
 
     private NetMessage.UserInput GenerateUserInput()
@@ -96,7 +128,9 @@ public partial class ClientPlayer : CharacterBody3D
         var userInput = new NetMessage.UserInput
         {
             Stamp = _seqStamp,
-            Keys = keys
+            Keys = keys,
+            LateralLookAngle = this.GlobalRotation.Y,
+            VerticalLookAngle = _rotationHelper.Rotation.X
         };
 
         return userInput;

@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" uid="uid://1rjoeqwlxcpi" path="res://client/weapons/fpv/MakarovBevelScene.tscn" id="1_5ubgy"]
+[ext_resource type="Script" path="res://dummy/DummyPlayer.cs" id="1_pbqtm"]
+[ext_resource type="Script" path="res://dummy/DummyWeapon.cs" id="3_j6kxf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3uinn"]
+albedo_color = Color(1, 0.415686, 0.25098, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3cfqm"]
+radius = 0.25
+height = 1.0
+
+[node name="Dummy" type="Node3D"]
+script = ExtResource("1_pbqtm")
+_weaponHolder = NodePath("RotationHelper/InventoryHolder")
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+layers = 4
+material_override = SubResource("StandardMaterial3D_3uinn")
+mesh = SubResource("CapsuleMesh_3cfqm")
+
+[node name="RotationHelper" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+metadata/_edit_lock_ = true
+
+[node name="InventoryHolder" type="Node3D" parent="RotationHelper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3)
+metadata/_edit_lock_ = true
+
+[node name="MakarovBevel2" parent="RotationHelper/InventoryHolder" instance=ExtResource("1_5ubgy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.091, 0.263)
+script = ExtResource("3_j6kxf")
+
+[node name="MakarovBevel" parent="RotationHelper/InventoryHolder" instance=ExtResource("1_5ubgy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.091, 0.263)
+visible = false
+script = ExtResource("3_j6kxf")

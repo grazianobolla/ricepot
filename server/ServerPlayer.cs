@@ -5,6 +5,8 @@ public partial class ServerPlayer : CharacterBody3D
 {
     public int MultiplayerID { get; set; } = 0;
     public int Stamp { get; private set; } = 0;
+    public float LateralLookAngle { get; private set; } = 0;
+    public float VerticalLookAngle { get; private set; } = 0;
 
     private Queue<NetMessage.UserInput> _pendingInputs = new();
     private int _lastStampReceived = 0;
@@ -42,13 +44,17 @@ public partial class ServerPlayer : CharacterBody3D
     private void Move(NetMessage.UserInput userInput)
     {
         Stamp = userInput.Stamp;
+        LateralLookAngle = userInput.LateralLookAngle;
+        VerticalLookAngle = userInput.VerticalLookAngle;
 
-        this.Velocity = PlayerMovement.ComputeMotion(
+        this.Velocity = Movement.ComputeMotion(
             this.GetRid(),
             this.GlobalTransform,
             this.Velocity,
-            PlayerMovement.InputToDirection(userInput.Keys));
+            Movement.InputToDirection(userInput.Keys),
+            userInput.LateralLookAngle,
+            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift));
 
-        Position += this.Velocity * (float)PlayerMovement.FRAME_DELTA;
+        Position += this.Velocity * (float)Movement.FRAME_DELTA;
     }
 }

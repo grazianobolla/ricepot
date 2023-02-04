@@ -1,0 +1,125 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://client/ClientPlayer.cs" id="1_0rme5"]
+[ext_resource type="Script" path="res://client/CameraView.cs" id="2_hl8bk"]
+[ext_resource type="Script" path="res://client/weapons/WeaponSwing.cs" id="3_bps84"]
+[ext_resource type="PackedScene" uid="uid://1rjoeqwlxcpi" path="res://client/weapons/fpv/MakarovBevelScene.tscn" id="4_s8r3d"]
+[ext_resource type="Script" path="res://ui/ViewportAdjuster.gd" id="5_8t5w8"]
+[ext_resource type="Script" path="res://client/weapons/Weapon.cs" id="5_grigt"]
+[ext_resource type="Script" path="res://scripts/GunCamera.gd" id="6_3uiwy"]
+[ext_resource type="Script" path="res://ui/ControlAdjuster.gd" id="7_wqg1d"]
+[ext_resource type="Texture2D" uid="uid://dt5vxdwiqv78s" path="res://resources/crosshair.png" id="8_efeuc"]
+[ext_resource type="Script" path="res://client/weapons/WeaponManager.cs" id="10_1wn26"]
+[ext_resource type="Script" path="res://client/PlayerMovement.cs" id="11_j5g3u"]
+
+[sub_resource type="CapsuleMesh" id="1"]
+radius = 0.25
+height = 1.0
+
+[sub_resource type="CapsuleShape3D" id="2"]
+radius = 0.25
+height = 1.0
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_0rme5")
+metadata/_edit_vertical_guides_ = []
+
+[node name="RotationHelper" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+script = ExtResource("2_hl8bk")
+metadata/_edit_lock_ = true
+
+[node name="Camera" type="Camera3D" parent="RotationHelper"]
+cull_mask = 1048573
+current = true
+fov = 70.0
+near = 0.01
+
+[node name="InventoryHolder" type="Node3D" parent="RotationHelper/Camera"]
+script = ExtResource("3_bps84")
+_playerPath = NodePath("../../../PlayerMovement")
+_shakeMultiplier = Vector3(0.004, 0.008, 0)
+metadata/_edit_lock_ = true
+
+[node name="MakarovBevel2" parent="RotationHelper/Camera/InventoryHolder" instance=ExtResource("4_s8r3d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.091, 0.263)
+script = ExtResource("5_grigt")
+FireRate = 400.0
+
+[node name="MakarovBevel" parent="RotationHelper/Camera/InventoryHolder" instance=ExtResource("4_s8r3d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.091, 0.263)
+script = ExtResource("5_grigt")
+FireRate = 600.0
+Automatic = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="RotationHelper/Camera"]
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_lock_ = true
+
+[node name="SubViewport" type="SubViewport" parent="RotationHelper/Camera/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(40, 40)
+render_target_update_mode = 4
+script = ExtResource("5_8t5w8")
+
+[node name="GunCamera" type="Camera3D" parent="RotationHelper/Camera/SubViewportContainer/SubViewport"]
+cull_mask = 2
+fov = 70.0
+script = ExtResource("6_3uiwy")
+camera_path = NodePath("../../..")
+metadata/_edit_lock_ = true
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("7_wqg1d")
+metadata/_edit_lock_ = true
+
+[node name="Crosshair" type="TextureRect" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.5
+offset_top = -7.5
+offset_right = 7.5
+offset_bottom = 7.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_efeuc")
+
+[node name="WeaponDebug" type="Label" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -13.0
+offset_right = 125.0
+offset_bottom = 13.0
+grow_vertical = 2
+text = "weapon debug label"
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+layers = 4
+mesh = SubResource("1")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+shape = SubResource("2")
+
+[node name="WeaponManager" type="Node" parent="."]
+script = ExtResource("10_1wn26")
+_weaponHolder = NodePath("../RotationHelper/Camera/InventoryHolder")
+_debugLabel = NodePath("../UserInterface/WeaponDebug")
+
+[node name="PlayerMovement" type="Node" parent="."]
+script = ExtResource("11_j5g3u")

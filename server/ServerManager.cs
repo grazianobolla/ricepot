@@ -5,7 +5,7 @@ using MessagePack;
 // Code executed on the server side only, handles network events
 public partial class ServerManager : Node
 {
-    [Export] private int _port = 9999;
+    [Export] private int _port = 7777;
 
     private SceneMultiplayer _multiplayer = new();
     private Godot.Collections.Array<Godot.Node> entityArray;
@@ -55,6 +55,8 @@ public partial class ServerManager : Node
                 Id = Int32.Parse(player.Name), //TODO: risky
                 PosArray = new float[3] { player.Position.X, player.Position.Y, player.Position.Z },
                 VelArray = new float[3] { player.Velocity.X, player.Velocity.Y, player.Velocity.Z },
+                LateralLookAngle = player.LateralLookAngle,
+                VerticalLookAngle = player.VerticalLookAngle,
                 Stamp = player.Stamp
             };
 
@@ -63,6 +65,7 @@ public partial class ServerManager : Node
 
         byte[] data = MessagePackSerializer.Serialize<NetMessage.ICommand>(snapshot);
 
+        GD.Print(data.Length);
         _multiplayer.SendBytes(data, 0,
             MultiplayerPeer.TransferModeEnum.UnreliableOrdered, 0);
     }
@@ -82,6 +85,10 @@ public partial class ServerManager : Node
                 sync.ServerTime = (int)Time.GetTicksMsec();
                 _multiplayer.SendBytes(MessagePackSerializer.Serialize<NetMessage.ICommand>(sync), (int)id,
                 MultiplayerPeer.TransferModeEnum.Unreliable, 1);
+                break;
+
+            case NetMessage.WeaponCommand weaponCmd:
+                _multiplayer.SendBytes(data, 0, MultiplayerPeer.TransferModeEnum.Reliable, 2); //Re-broadcast
                 break;
         }
     }

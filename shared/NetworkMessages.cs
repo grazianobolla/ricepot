@@ -6,6 +6,7 @@ namespace NetMessage
     [MessagePack.Union(0, typeof(UserCommand))]
     [MessagePack.Union(1, typeof(GameSnapshot))]
     [MessagePack.Union(2, typeof(Sync))]
+    [MessagePack.Union(3, typeof(WeaponCommand))]
     public interface ICommand { }
 
     // Used to calculate latency
@@ -31,6 +32,19 @@ namespace NetMessage
     }
 
     [MessagePackObject]
+    public partial struct WeaponCommand : ICommand
+    {
+        [Key(0)]
+        public int Id;
+
+        [Key(1)]
+        public byte WeaponIndex;
+
+        [Key(2)]
+        public byte WeaponAction;
+    }
+
+    [MessagePackObject]
     public partial struct UserInput
     {
         [Key(0)]
@@ -38,6 +52,12 @@ namespace NetMessage
 
         [Key(1)]
         public byte Keys;
+
+        [Key(2)]
+        public float LateralLookAngle;
+
+        [Key(3)]
+        public float VerticalLookAngle;
     }
 
     // Game state for a given point in time
@@ -59,13 +79,19 @@ namespace NetMessage
         public int Id; // Player ID
 
         [Key(1)]
-        public float[] PosArray; // Player position
+        public float[] PosArray;
 
         [Key(2)]
-        public float[] VelArray; // Player velocity
+        public float[] VelArray;
 
         [Key(3)]
         public int Stamp; // Last processed stamp
+
+        [Key(4)]
+        public float LateralLookAngle;
+
+        [Key(5)]
+        public float VerticalLookAngle;
 
         [IgnoreMember]
         public Vector3 Position
@@ -88,5 +114,12 @@ namespace NetMessage
         Right = 0b_0000_1000,
         Space = 0b_0001_0000,
         Shift = 0b_0010_0000,
+    }
+
+    public enum WeaponFlags
+    {
+        Fire = 0b_0000_0001,
+        Reload = 0b_0000_0010,
+        Inspect = 0b_0000_0100,
     }
 }

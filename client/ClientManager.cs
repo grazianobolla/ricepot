@@ -6,7 +6,7 @@ using MessagePack;
 public partial class ClientManager : Node
 {
     [Export] private string _address = "localhost";
-    [Export] private int _port = 9999;
+    [Export] private int _port = 7777;
     [Export] private int _lerpBufferWindow = 50;
     [Export] private int _maxLerp = 150;
 
@@ -39,18 +39,58 @@ public partial class ClientManager : Node
     {
         var command = MessagePackSerializer.Deserialize<NetMessage.ICommand>(data);
 
-        if (command is NetMessage.GameSnapshot snapshot)
+        switch (command)
         {
-            _snapshotInterpolator.PushState(snapshot);
+            case NetMessage.GameSnapshot snapshot:
+                PushSnapshot(snapshot);
+                break;
 
-            foreach (NetMessage.UserState state in snapshot.States)
+            case NetMessage.WeaponCommand weaponCmd:
+                PushWeaponCmd(weaponCmd);
+                break;
+        }
+    }
+
+    private void PushWeaponCmd(NetMessage.WeaponCommand weaponCmd)
+    {
+        // Ignore local player
+        if (weaponCmd.Id == Multiplayer.GetUniqueId())
+            return;
+
+        var dummy = _entityArray.GetNode<DummyPlayer>(weaponCmd.Id.ToString());
+        dummy.HandleCommand(weaponCmd);
+    }
+
+    private void PushSnapshot(NetMessage.GameSnapshot snapshot)
+    {
+        _snapshotInterpolator.PushState(snapshot);
+
+        foreach (NetMessage.UserState state in snapshot.States)
+        {
+            if (state.Id == Multiplayer.GetUniqueId())
             {
-                if (state.Id == Multiplayer.GetUniqueId())
-                {
-                    CustomSpawner.LocalPlayer.ReceiveState(state);
-                }
+                CustomSpawner.LocalPlayer.ReceiveState(state);
             }
         }
+    }
+
+    private void DebugInfo(double delta)
+    {
+        var label = GetNode<Label>("Debug/Label2");
+        label.Modulate = Colors.White;
+
+        label.Text = $"buf {_snapshotInterpolator.BufferCount} ";
+        label.Text += String.Format("int {0:0.00}", _snapshotInterpolator.InterpolationFactor);
+        label.Text += $" len {_snapshotInterpolator.BufferTime}ms \nclk {NetworkClock.Clock} ofst {_netClock.Offset}ms";
+        label.Text += $"\nping {_netClock.InmediateLatency}ms pps {_packetsPerSecond} jit {_netClock.Jitter}";
+
+        if (CustomSpawner.LocalPlayer != null)
+        {
+            label.Text += $"\nrdt {CustomSpawner.LocalPlayer.RedundantInputs} tx {_sentPerSecond} rx {_recPerSecond}";
+        }
+
+        if (_snapshotInterpolator.InterpolationFactor > 1)
+            label.Modulate = Colors.Red;
     }
 
     private void OnLatencyCalculated(int latencyAverage, int offsetAverage, int jitter)
@@ -73,25 +113,6 @@ public partial class ClientManager : Node
         _multiplayer.MultiplayerPeer = peer;
         GetTree().SetMultiplayer(_multiplayer);
         GD.Print("Client connected to ", _address, ":", _port);
-    }
-
-    private void DebugInfo(double delta)
-    {
-        var label = GetNode<Label>("Debug/Label2");
-        label.Modulate = Colors.White;
-
-        label.Text = $"buf {_snapshotInterpolator.BufferCount} ";
-        label.Text += String.Format("int {0:0.00}", _snapshotInterpolator.InterpolationFactor);
-        label.Text += $" len {_snapshotInterpolator.BufferTime}ms \nclk {NetworkClock.Clock} ofst {_netClock.Offset}ms";
-        label.Text += $"\nping {_netClock.InmediateLatency}ms pps {_packetsPerSecond} jit {_netClock.Jitter}";
-
-        if (CustomSpawner.LocalPlayer != null)
-        {
-            label.Text += $"\nrdt {CustomSpawner.LocalPlayer.RedundantInputs} tx {_sentPerSecond} rx {_recPerSecond}";
-        }
-
-        if (_snapshotInterpolator.InterpolationFactor > 1)
-            label.Modulate = Colors.Red;
     }
 
     private void OnDebugTimerOut()

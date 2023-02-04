@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://1rjoeqwlxcpi"]
+
+[ext_resource type="PackedScene" uid="uid://fme8ynk8ncce" path="res://models/MakarovBevel/MakarovBevel.glb" id="1_jbdeo"]
+[ext_resource type="AudioStream" uid="uid://cs4wdfq55l1mj" path="res://resources/sounds/MakarovShoot2.ogg" id="2_pk12i"]
+
+[node name="MakarovBevel" instance=ExtResource("1_jbdeo")]
+
+[node name="Skeleton3D" parent="HandsArmature" index="0"]
+bones/2/rotation = Quaternion(0.600656, 3.5549e-14, -1.43208e-07, 0.799507)
+bones/3/rotation = Quaternion(-0.752821, 0.123069, -0.359484, 0.537481)
+bones/4/rotation = Quaternion(8.45517e-09, 9.52008e-09, 0.609377, 0.792881)
+bones/5/rotation = Quaternion(-0.0871988, -0.363333, -0.423437, 0.825279)
+bones/8/rotation = Quaternion(-0.769688, -0.304342, 0.308299, 0.468943)
+bones/9/rotation = Quaternion(-7.57961e-09, 8.53425e-09, -0.438424, 0.898768)
+bones/10/rotation = Quaternion(0.0843627, 0.299045, 0.372033, 0.874669)
+
+[node name="Hands" parent="HandsArmature/Skeleton3D" index="0"]
+layers = 2
+cast_shadow = 0
+
+[node name="Makarov" parent="HandsArmature/Skeleton3D" index="1"]
+layers = 2
+cast_shadow = 0
+
+[node name="AnimationPlayer" parent="." index="1"]
+autoplay = "draw"
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="." index="2"]
+stream = ExtResource("2_pk12i")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0497715, 0.077809, -0.639199)
+light_color = Color(1, 0.780392, 0.490196, 1)

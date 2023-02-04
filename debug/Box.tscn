@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://b16empl8mppfp"]
+
+[ext_resource type="Material" uid="uid://dgnuw3pgm2p7y" path="res://addons/proto/red/material_001.tres" id="1_vjgni"]
+
+[sub_resource type="BoxMesh" id="2"]
+size = Vector3(0.4, 0.4, 0.4)
+
+[sub_resource type="BoxShape3D" id="1"]
+size = Vector3(0.4, 0.4, 0.4)
+
+[node name="Box" type="RigidBody3D" groups=["PhysicsProp"]]
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+material_override = ExtResource("1_vjgni")
+mesh = SubResource("2")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+shape = SubResource("1")
