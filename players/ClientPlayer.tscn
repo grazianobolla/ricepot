@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=14 format=3 uid="uid://dhyhb6uwtsbbm"]
 
 [ext_resource type="Script" path="res://client/ClientPlayer.cs" id="1_0rme5"]
 [ext_resource type="Script" path="res://client/CameraView.cs" id="2_hl8bk"]
