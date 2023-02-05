@@ -44,8 +44,6 @@ public partial class ClientPlayer : CharacterBody3D
 
         (Multiplayer as SceneMultiplayer).SendBytes(data, 1,
             MultiplayerPeer.TransferModeEnum.Reliable, 2);
-
-        GD.Print("Sending weapon cmd");
     }
 
     public void ReceiveState(NetMessage.UserState state)

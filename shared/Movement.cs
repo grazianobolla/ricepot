@@ -3,6 +3,9 @@ using NetMessage;
 
 public static class Movement
 {
+    public const float MaxWalkSpeed = 1.0f;
+    public const float MaxRunSpeed = 3.0f;
+
     public static double FRAME_DELTA = (1.0 / Engine.PhysicsTicksPerSecond);
 
     public static Vector3 ComputeMotion(Rid rid, Transform3D from, Vector3 velocity, Vector2 input, float lookAngle, bool isWalking)
@@ -12,12 +15,12 @@ public static class Movement
 
         if (direction != Vector3.Zero)
         {
-            velocity.X = direction.X * (isWalking ? 1f : 3f);
-            velocity.Z = direction.Z * (isWalking ? 1f : 3f);
+            velocity.X = direction.X * (isWalking ? MaxWalkSpeed : MaxRunSpeed);
+            velocity.Z = direction.Z * (isWalking ? MaxWalkSpeed : MaxRunSpeed);
         }
         else
         {
-            velocity *= 0.85f;
+            velocity *= 0.8f;
         }
 
         var testParameters = new PhysicsTestMotionParameters3D();

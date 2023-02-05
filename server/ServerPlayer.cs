@@ -21,8 +21,7 @@ public partial class ServerPlayer : CharacterBody3D
 
         while (_pendingInputs.Count > _packetWindow)
         {
-            var input = _pendingInputs.Dequeue();
-            GD.PrintErr($"Server dropping package {input.Stamp} for {MultiplayerID}"); //TODO: this is not very good
+            var input = _pendingInputs.Dequeue(); //TODO: I don't think this is good
         }
 
         var userInput = _pendingInputs.Dequeue();

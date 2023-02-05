@@ -5,8 +5,9 @@ using MessagePack;
 // Code executed on the client side only, handles network events
 public partial class ClientManager : Node
 {
-    [Export] private string _address = "localhost";
-    [Export] private int _port = 7777;
+    public string ServerAddress { get; set; }
+    public int ServerPort { get; set; }
+
     [Export] private int _lerpBufferWindow = 50;
     [Export] private int _maxLerp = 150;
 
@@ -109,10 +110,10 @@ public partial class ClientManager : Node
         _multiplayer.PeerPacket += OnPacketReceived;
 
         ENetMultiplayerPeer peer = new ENetMultiplayerPeer();
-        peer.CreateClient(_address, _port);
+        peer.CreateClient(ServerAddress, ServerPort);
         _multiplayer.MultiplayerPeer = peer;
         GetTree().SetMultiplayer(_multiplayer);
-        GD.Print("Client connected to ", _address, ":", _port);
+        GD.Print("Client connected to ", ServerAddress, ":", ServerPort);
     }
 
     private void OnDebugTimerOut()

@@ -5,7 +5,7 @@ using MessagePack;
 // Code executed on the server side only, handles network events
 public partial class ServerManager : Node
 {
-    [Export] private int _port = 7777;
+    public int ListeningPort { get; set; } = 7777;
 
     private SceneMultiplayer _multiplayer = new();
     private Godot.Collections.Array<Godot.Node> entityArray;
@@ -65,7 +65,6 @@ public partial class ServerManager : Node
 
         byte[] data = MessagePackSerializer.Serialize<NetMessage.ICommand>(snapshot);
 
-        GD.Print(data.Length);
         _multiplayer.SendBytes(data, 0,
             MultiplayerPeer.TransferModeEnum.UnreliableOrdered, 0);
     }
@@ -112,12 +111,12 @@ public partial class ServerManager : Node
         _multiplayer.PeerPacket += OnPacketReceived;
 
         ENetMultiplayerPeer peer = new ENetMultiplayerPeer();
-        peer.CreateServer(_port);
+        peer.CreateServer(ListeningPort);
 
         _multiplayer.MultiplayerPeer = peer;
         GetTree().SetMultiplayer(_multiplayer);
 
-        GD.Print("Server listening on ", _port);
+        GD.Print("Server listening on ", ListeningPort);
     }
 
     private void DebugInfo()
