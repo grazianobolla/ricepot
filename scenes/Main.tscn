@@ -9,7 +9,7 @@
 [ext_resource type="Material" uid="uid://crjvwoele784i" path="res://addons/proto/orange/material_001.tres" id="4_qk83i"]
 [ext_resource type="Material" uid="uid://dgnuw3pgm2p7y" path="res://addons/proto/red/material_001.tres" id="5_83hys"]
 [ext_resource type="PackedScene" uid="uid://1fbyoad8h8gr" path="res://players/ServerPlayer.tscn" id="5_lgfx3"]
-[ext_resource type="PackedScene" path="res://players/DummyPlayer.tscn" id="6_82wv5"]
+[ext_resource type="PackedScene" uid="uid://ctvat4pwxbski" path="res://players/DummyPlayer.tscn" id="6_82wv5"]
 [ext_resource type="Material" uid="uid://d4kfsggm3u3u8" path="res://addons/proto/green/material_001.tres" id="6_ta6hy"]
 [ext_resource type="PackedScene" uid="uid://cet0sf6nqjnuo" path="res://resources/models/Mailbox/Mailbox.glb" id="7_sby4e"]
 
@@ -34,8 +34,8 @@ height = 0.1
 [node name="Main" type="Node3D"]
 script = ExtResource("1_wmb7r")
 
-[node name="Map" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+[node name="Map" type="Node" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="Box" parent="Map" instance=ExtResource("2_qakgi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 2)
@@ -49,7 +49,7 @@ size = Vector3(30, 1, 30)
 material = ExtResource("3_3i078")
 
 [node name="CSGBox" type="CSGBox3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.0999999)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2.1)
 use_collision = true
 size = Vector3(10, 1, 1)
 material = ExtResource("4_qk83i")
@@ -133,6 +133,7 @@ script = ExtResource("3_tt4b3")
 _playerScene = ExtResource("4_35anr")
 _serverPlayerScene = ExtResource("5_lgfx3")
 _dummyScene = ExtResource("6_82wv5")
+_spawnPos = Vector3(0, 1, 0)
 
 [node name="HitIndicator" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_8ugfy")

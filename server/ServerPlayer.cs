@@ -47,12 +47,13 @@ public partial class ServerPlayer : CharacterBody3D
         VerticalLookAngle = userInput.VerticalLookAngle;
 
         this.Velocity = Movement.ComputeMotion(
-            this.GetRid(),
+            this,
             this.GlobalTransform,
             this.Velocity,
             Movement.InputToDirection(userInput.Keys),
             userInput.LateralLookAngle,
-            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift));
+            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift),
+            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Space));
 
         Position += this.Velocity * (float)Movement.FRAME_DELTA;
     }

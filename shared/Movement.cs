@@ -1,42 +1,68 @@
 using Godot;
 using NetMessage;
 
-public static class Movement
+public class Movement
 {
-    public const float MaxWalkSpeed = 1.0f;
-    public const float MaxRunSpeed = 3.0f;
+    public const float MaxWalkSpeed = 0.8f;
+    public const float MaxRunSpeed = 2.5f;
+    public const float Gravity = 9.0f;
+    public const float JumpVelocity = 2.0f;
 
     public static double FRAME_DELTA = (1.0 / Engine.PhysicsTicksPerSecond);
 
-    public static Vector3 ComputeMotion(Rid rid, Transform3D from, Vector3 velocity, Vector2 input, float lookAngle, bool isWalking)
+    public static Vector3 ComputeMotion(CharacterBody3D body, Transform3D from, Vector3 velocity, Vector2 input, float lookAngle, bool isWalking, bool isJumping, int maxSlides = 4)
     {
+        bool isOnFloor = false;
+
         Vector3 direction = new Vector3(input.X, 0, input.Y).Normalized();
         direction = direction.Rotated(Vector3.Up, lookAngle);
 
-        if (direction != Vector3.Zero)
+        if (!direction.IsZeroApprox())
         {
             velocity.X = direction.X * (isWalking ? MaxWalkSpeed : MaxRunSpeed);
             velocity.Z = direction.Z * (isWalking ? MaxWalkSpeed : MaxRunSpeed);
         }
         else
         {
-            velocity *= 0.8f;
+            velocity.X = 0;
+            velocity.Z = 0;
         }
 
-        var testParameters = new PhysicsTestMotionParameters3D();
-        testParameters.From = from;
-        testParameters.Motion = velocity * (float)FRAME_DELTA;
-
-        var collResult = new PhysicsTestMotionResult3D();
-
-        bool hasCollided = PhysicsServer3D.BodyTestMotion(rid, testParameters, collResult);
-
-        if (hasCollided)
+        for (int i = 0; i < maxSlides; i++)
         {
-            velocity = velocity.Slide(collResult.GetCollisionNormal());
+            var coll = new KinematicCollision3D();
+            bool hasCollided = body.TestMove(from, velocity * (float)FRAME_DELTA, coll, 0.001f, true, 6);
+
+            if (!isOnFloor)
+                isOnFloor = CheckOnFloor(coll);
+
+            if (hasCollided)
+            {
+                velocity = velocity.Slide(coll.GetNormal());
+            }
         }
+
+        if (!isOnFloor)
+            velocity.Y -= Gravity * (float)FRAME_DELTA;
+
+        if (isJumping && isOnFloor)
+            velocity.Y = JumpVelocity;
 
         return velocity;
+    }
+
+    private static bool CheckOnFloor(KinematicCollision3D collision)
+    {
+        for (int i = collision.GetCollisionCount() - 1; i >= 0; i--)
+        {
+            float floorAngle = collision.GetAngle(i, Vector3.Up);
+            if (floorAngle <= Mathf.DegToRad(45.0f))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static Vector2 InputToDirection(byte input)

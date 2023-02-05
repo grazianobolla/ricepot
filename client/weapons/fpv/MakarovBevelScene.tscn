@@ -1,18 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://1rjoeqwlxcpi"]
+[gd_scene load_steps=4 format=3 uid="uid://1rjoeqwlxcpi"]
 
 [ext_resource type="PackedScene" uid="uid://fme8ynk8ncce" path="res://models/MakarovBevel/MakarovBevel.glb" id="1_jbdeo"]
-[ext_resource type="AudioStream" uid="uid://cs4wdfq55l1mj" path="res://resources/sounds/MakarovShoot2.ogg" id="2_pk12i"]
+[ext_resource type="Texture2D" uid="uid://b50x2ntyrt847" path="res://resources/flash.png" id="3_iwn1o"]
+[ext_resource type="Script" path="res://scripts/RandomFlashAngle.gd" id="4_6orae"]
 
 [node name="MakarovBevel" instance=ExtResource("1_jbdeo")]
 
 [node name="Skeleton3D" parent="HandsArmature" index="0"]
-bones/2/rotation = Quaternion(0.600656, 3.5549e-14, -1.43208e-07, 0.799507)
-bones/3/rotation = Quaternion(-0.752821, 0.123069, -0.359484, 0.537481)
-bones/4/rotation = Quaternion(8.45517e-09, 9.52008e-09, 0.609377, 0.792881)
-bones/5/rotation = Quaternion(-0.0871988, -0.363333, -0.423437, 0.825279)
-bones/8/rotation = Quaternion(-0.769688, -0.304342, 0.308299, 0.468943)
-bones/9/rotation = Quaternion(-7.57961e-09, 8.53425e-09, -0.438424, 0.898768)
-bones/10/rotation = Quaternion(0.0843627, 0.299045, 0.372033, 0.874669)
+bones/0/position = Vector3(0.0503076, -0.305411, -0.509788)
+bones/0/rotation = Quaternion(-0.45293, -1.06281e-07, 5.39935e-08, 0.891546)
+bones/1/position = Vector3(-1.09377e-08, 0.0999358, 0.000998818)
+bones/2/rotation = Quaternion(0.17561, 4.01478e-14, -4.18686e-08, 0.98446)
+bones/3/rotation = Quaternion(-0.850402, 0.098725, 0.0129714, 0.516626)
+bones/4/rotation = Quaternion(3.47657e-09, 4.4111e-09, 0.0021548, 0.999998)
+bones/5/rotation = Quaternion(-0.105017, -0.0301355, -0.0968589, 0.989283)
+bones/8/rotation = Quaternion(-0.851087, -0.156722, -0.070861, 0.496053)
+bones/9/rotation = Quaternion(-4.30076e-09, -1.61415e-09, -0.00216863, 0.999998)
+bones/10/rotation = Quaternion(-0.0460639, -0.211447, 0.188485, 0.957936)
 
 [node name="Hands" parent="HandsArmature/Skeleton3D" index="0"]
 layers = 2
@@ -25,9 +29,17 @@ cast_shadow = 0
 [node name="AnimationPlayer" parent="." index="1"]
 autoplay = "draw"
 
-[node name="AudioPlayer" type="AudioStreamPlayer" parent="." index="2"]
-stream = ExtResource("2_pk12i")
+[node name="AudioPlayer" type="AudioStreamPlayer3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0494881, 0.0772673, -0.640002)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0497715, 0.077809, -0.639199)
 light_color = Color(1, 0.780392, 0.490196, 1)
+light_energy = 0.0
+
+[node name="Flash" type="Sprite3D" parent="." index="4"]
+transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.0485305, 0.074737, -0.643086)
+visible = false
+modulate = Color(0.878431, 0.654902, 0.317647, 1)
+texture = ExtResource("3_iwn1o")
+script = ExtResource("4_6orae")

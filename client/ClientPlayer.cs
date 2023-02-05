@@ -58,12 +58,14 @@ public partial class ClientPlayer : CharacterBody3D
         foreach (var userInput in _userInputs)
         {
             expectedVelocity = Movement.ComputeMotion(
-                this.GetRid(),
+                this,
                 expectedTransform,
                 expectedVelocity,
                 Movement.InputToDirection(userInput.Keys),
                 userInput.LateralLookAngle,
-                Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift));
+                Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift),
+                Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Space));
+
 
             expectedTransform.Origin += expectedVelocity * (float)Movement.FRAME_DELTA;
         }
@@ -102,12 +104,13 @@ public partial class ClientPlayer : CharacterBody3D
     private void MoveLocally(NetMessage.UserInput userInput)
     {
         this.Velocity = Movement.ComputeMotion(
-            this.GetRid(),
+            this,
             this.GlobalTransform,
             this.Velocity,
             Movement.InputToDirection(userInput.Keys),
             userInput.LateralLookAngle,
-            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift));
+            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Shift),
+            Movement.ReadInput(userInput.Keys, NetMessage.InputFlags.Space));
 
         Position += this.Velocity * (float)Movement.FRAME_DELTA;
     }

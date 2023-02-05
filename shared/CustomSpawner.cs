@@ -6,6 +6,7 @@ public partial class CustomSpawner : MultiplayerSpawner
     [Export] private PackedScene _playerScene;
     [Export] private PackedScene _serverPlayerScene;
     [Export] private PackedScene _dummyScene;
+    [Export] private Vector3 _spawnPos = Vector3.Up * 3;
 
     public static ClientPlayer LocalPlayer;
 
@@ -28,6 +29,7 @@ public partial class CustomSpawner : MultiplayerSpawner
             ServerPlayer player = _serverPlayerScene.Instantiate() as ServerPlayer;
             player.Name = id.ToString();
             player.MultiplayerID = id;
+            player.Position = _spawnPos;
             return player;
         }
 
@@ -38,6 +40,7 @@ public partial class CustomSpawner : MultiplayerSpawner
             ClientPlayer player = _playerScene.Instantiate() as ClientPlayer;
             player.Name = id.ToString();
             player.SetMultiplayerAuthority(id);
+            player.Position = _spawnPos;
             LocalPlayer = player;
             return player;
         }
@@ -45,8 +48,9 @@ public partial class CustomSpawner : MultiplayerSpawner
         // Dummy player
         {
             GD.Print("Spawned dummy");
-            Node player = _dummyScene.Instantiate();
+            Node3D player = _dummyScene.Instantiate() as Node3D;
             player.Name = id.ToString();
+            player.Position = _spawnPos;
             player.SetMultiplayerAuthority(id);
             return player;
         }

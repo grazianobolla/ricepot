@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3 uid="uid://ctvat4pwxbski"]
 
 [ext_resource type="PackedScene" uid="uid://1rjoeqwlxcpi" path="res://client/weapons/fpv/MakarovBevelScene.tscn" id="1_5ubgy"]
 [ext_resource type="Script" path="res://dummy/DummyPlayer.cs" id="1_pbqtm"]
@@ -11,6 +11,16 @@ albedo_color = Color(1, 0.415686, 0.25098, 1)
 radius = 0.25
 height = 1.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b4hx2"]
+albedo_color = Color(0.152941, 0.152941, 0.152941, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_jflpw"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_61jax"]
+albedo_color = Color(0.152941, 0.152941, 0.152941, 1)
+
 [node name="Dummy" type="Node3D"]
 script = ExtResource("1_pbqtm")
 _weaponHolder = NodePath("RotationHelper/InventoryHolder")
@@ -19,6 +29,16 @@ _weaponHolder = NodePath("RotationHelper/InventoryHolder")
 layers = 4
 material_override = SubResource("StandardMaterial3D_3uinn")
 mesh = SubResource("CapsuleMesh_3cfqm")
+
+[node name="EyesMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, -0.2)
+material_override = SubResource("StandardMaterial3D_b4hx2")
+mesh = SubResource("SphereMesh_jflpw")
+
+[node name="EyesMesh2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, -0.2)
+material_override = SubResource("StandardMaterial3D_61jax")
+mesh = SubResource("SphereMesh_jflpw")
 
 [node name="RotationHelper" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
