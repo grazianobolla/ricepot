@@ -7,7 +7,7 @@ func _ready():
 	var args =_read_args()
 	if "server" in args:
 		$Control/Label.text = "Server Side"
-		_create_server(args["server"])
+		_create_server(int(args["server"]))
 		return
 	
 func _on_button_pressed(host:bool):
