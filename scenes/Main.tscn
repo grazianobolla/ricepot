@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bitm66ov2hech"]
+[gd_scene load_steps=20 format=3 uid="uid://dol3c0y37xm17"]
 
 [ext_resource type="Script" path="res://scripts/Init.gd" id="1_wmb7r"]
 [ext_resource type="PackedScene" path="res://debug/Box.tscn" id="2_qakgi"]
@@ -12,7 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://ctvat4pwxbski" path="res://players/DummyPlayer.tscn" id="6_82wv5"]
 [ext_resource type="Material" uid="uid://d4kfsggm3u3u8" path="res://addons/proto/green/material_001.tres" id="6_ta6hy"]
 [ext_resource type="PackedScene" uid="uid://cet0sf6nqjnuo" path="res://resources/models/Mailbox/Mailbox.glb" id="7_sby4e"]
-[ext_resource type="Script" path="res://scenes/DebugQOL.cs" id="13_uix63"]
+[ext_resource type="Script" path="res://debug/VersionLabel.gd" id="9_fwg0b"]
+[ext_resource type="Script" path="res://scripts/KeysHelper.cs" id="14_fnw8q"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2e12n"]
 sky_top_color = Color(0.207843, 0.537255, 0.909804, 1)
@@ -120,6 +121,21 @@ offset_bottom = 23.0
 text = "character_info"
 script = ExtResource("2_uv7ob")
 
+[node name="Version" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -111.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "version_label"
+horizontal_alignment = 2
+script = ExtResource("9_fwg0b")
+
 [node name="Buttons" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
@@ -164,7 +180,7 @@ material_override = SubResource("StandardMaterial3D_8ugfy")
 mesh = SubResource("SphereMesh_dp0df")
 
 [node name="DebugQOL" type="Node" parent="."]
-script = ExtResource("13_uix63")
+script = ExtResource("14_fnw8q")
 
 [connection signal="pressed" from="Buttons/Button" to="." method="_on_button_pressed" binds= [false]]
 [connection signal="pressed" from="Buttons/Button2" to="." method="_on_button_pressed" binds= [true]]

@@ -4,11 +4,8 @@ var _server_scene = preload("res://scenes/Server.tscn")
 var _client_scene = preload("res://scenes/Client.tscn")
 
 func _ready():
-	var args =_read_args()
-	if "server" in args:
-		$Control/Label.text = "Server Side"
-		_create_server(int(args["server"]))
-		return
+	_check_if_server()
+	pass
 	
 func _on_button_pressed(host:bool):
 	var created = false
@@ -53,3 +50,10 @@ func _create_client(fullAddress: String):
 	client.set("ServerPort", data[1])
 	self.add_child(client)
 	return true
+
+func _check_if_server():
+	var args =_read_args()
+	if "server" in args:
+		$Control/Label.text = "Server Side"
+		_create_server(int(args["server"]))
+		return

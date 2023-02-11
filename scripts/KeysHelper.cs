@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class DebugQOL : Node
+public partial class KeysHelper : Node
 {
     public override void _Input(InputEvent @event)
     {
