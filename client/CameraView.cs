@@ -25,6 +25,10 @@ public partial class CameraView : Node3D
             Vector3 cameraRot = RotationDegrees;
             cameraRot.X = Mathf.Clamp(cameraRot.X, -_maxVerticalAngle, _maxVerticalAngle);
             RotationDegrees = cameraRot;
+
+            //reset collider
+            //TODO: do it right
+            player.GetNode<CollisionShape3D>("CollisionShape").GlobalRotation = Vector3.Zero;
         }
     }
 }

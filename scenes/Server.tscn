@@ -33,4 +33,9 @@ anchor_bottom = 1.0
 offset_top = -26.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "0"
+text = "debug_info"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)
+projection = 1
+size = 30.0

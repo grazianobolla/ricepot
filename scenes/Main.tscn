@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://debug/debug_label.gd" id="2_uv7ob"]
 [ext_resource type="Material" uid="uid://bver7sw6yy1pu" path="res://addons/proto/dark/material_001.tres" id="3_3i078"]
 [ext_resource type="Script" path="res://shared/CustomSpawner.cs" id="3_tt4b3"]
-[ext_resource type="PackedScene" uid="uid://dhyhb6uwtsbbm" path="res://players/ClientPlayer.tscn" id="4_35anr"]
+[ext_resource type="PackedScene" uid="uid://qbx1knujte8b" path="res://players/ClientPlayer.tscn" id="4_35anr"]
 [ext_resource type="Material" uid="uid://crjvwoele784i" path="res://addons/proto/orange/material_001.tres" id="4_qk83i"]
 [ext_resource type="Material" uid="uid://dgnuw3pgm2p7y" path="res://addons/proto/red/material_001.tres" id="5_83hys"]
 [ext_resource type="PackedScene" uid="uid://1fbyoad8h8gr" path="res://players/ServerPlayer.tscn" id="5_lgfx3"]
@@ -107,6 +107,7 @@ shadow_bias = 0.01
 environment = SubResource("Environment_4j2l1")
 
 [node name="Control" type="Control" parent="."]
+z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

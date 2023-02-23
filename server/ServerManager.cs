@@ -25,14 +25,14 @@ public partial class ServerManager : Node
             BroadcastSnapshot(); // Broadcast snapshot at NetworkTickrate rate
             _netTickCounter = 0;
         }
-
-        DebugInfo();
     }
 
     public override void _PhysicsProcess(double delta)
     {
         entityArray = GetNode("/root/Main/EntityArray").GetChildren();
         ProcessPendingPackets();
+
+        DebugInfo();
     }
 
     // Process corresponding packets for this tick
