@@ -38,8 +38,8 @@ public class SnapshotInterpolator
             for (int i = 0; i < futureStates.Length; i++)
             {
                 //TODO: check if the player is aviable in both states
-                NetMessage.UserState futureState = _snapshotBuffer[NextFuture].States[i];
-                NetMessage.UserState pastState = _snapshotBuffer[RecentPast].States[i];
+                NetMessage.PlayerState futureState = _snapshotBuffer[NextFuture].States[i];
+                NetMessage.PlayerState pastState = _snapshotBuffer[RecentPast].States[i];
 
                 var entity = playersArray.GetNode<Node3D>(futureState.Id.ToString());
 

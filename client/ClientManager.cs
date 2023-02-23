@@ -66,7 +66,7 @@ public partial class ClientManager : Node
     {
         _snapshotInterpolator.PushState(snapshot);
 
-        foreach (NetMessage.UserState state in snapshot.States)
+        foreach (NetMessage.PlayerState state in snapshot.States)
         {
             if (state.Id == Multiplayer.GetUniqueId())
             {

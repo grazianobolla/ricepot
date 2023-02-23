@@ -46,7 +46,7 @@ public partial class ClientPlayer : CharacterBody3D
             MultiplayerPeer.TransferModeEnum.Reliable, 2);
     }
 
-    public void ReceiveState(NetMessage.UserState state)
+    public void ReceiveState(NetMessage.PlayerState state)
     {
         _userInputs.RemoveAll(input => input.Stamp <= state.Stamp);
 

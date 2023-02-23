@@ -23,7 +23,6 @@ albedo_color = Color(0.152941, 0.152941, 0.152941, 1)
 
 [node name="Dummy" type="Node3D"]
 script = ExtResource("1_pbqtm")
-_weaponHolder = NodePath("RotationHelper/InventoryHolder")
 
 [node name="MeshInstance" type="MeshInstance3D" parent="."]
 layers = 4

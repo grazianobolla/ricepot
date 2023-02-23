@@ -13,7 +13,7 @@ public partial class DummyPlayer : Node3D
         _rotationHelper = GetNode<Node3D>("RotationHelper");
     }
 
-    public void IntepolateState(NetMessage.UserState past, NetMessage.UserState future, float weight)
+    public void IntepolateState(NetMessage.PlayerState past, NetMessage.PlayerState future, float weight)
     {
         Position = past.Position.Lerp(future.Position, weight);
 

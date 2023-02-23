@@ -1,14 +1,16 @@
 using Godot;
-using System;
 using MessagePack;
 
 // Code executed on the server side only, handles network events
 public partial class ServerManager : Node
 {
+    private const int NetworkTicksPerSecond = 30;
     public int ListeningPort { get; set; } = 7777;
 
     private SceneMultiplayer _multiplayer = new();
     private Godot.Collections.Array<Godot.Node> entityArray;
+
+    private double _netTickCounter = 0;
 
     public override void _Ready()
     {
@@ -17,15 +19,20 @@ public partial class ServerManager : Node
 
     public override void _Process(double delta)
     {
+        _netTickCounter += delta;
+        if (_netTickCounter >= (1.0 / NetworkTicksPerSecond))
+        {
+            BroadcastSnapshot(); // Broadcast snapshot at NetworkTickrate rate
+            _netTickCounter = 0;
+        }
+
         DebugInfo();
     }
 
     public override void _PhysicsProcess(double delta)
     {
         entityArray = GetNode("/root/Main/EntityArray").GetChildren();
-
         ProcessPendingPackets();
-        BroadcastSnapshot();
     }
 
     // Process corresponding packets for this tick
@@ -43,24 +50,13 @@ public partial class ServerManager : Node
         var snapshot = new NetMessage.GameSnapshot
         {
             Time = (int)Time.GetTicksMsec(),
-            States = new NetMessage.UserState[entityArray.Count]
+            States = new NetMessage.PlayerState[entityArray.Count]
         };
 
         for (int i = 0; i < entityArray.Count; i++)
         {
-            var player = entityArray[i] as ServerPlayer; //player
-
-            var userState = new NetMessage.UserState
-            {
-                Id = Int32.Parse(player.Name), //TODO: risky
-                PosArray = new float[3] { player.Position.X, player.Position.Y, player.Position.Z },
-                VelArray = new float[3] { player.Velocity.X, player.Velocity.Y, player.Velocity.Z },
-                LateralLookAngle = player.LateralLookAngle,
-                VerticalLookAngle = player.VerticalLookAngle,
-                Stamp = player.Stamp
-            };
-
-            snapshot.States[i] = userState;
+            var player = entityArray[i] as ServerPlayer;
+            snapshot.States[i] = player.GetCurrentPlayerState();
         }
 
         byte[] data = MessagePackSerializer.Serialize<NetMessage.ICommand>(snapshot);

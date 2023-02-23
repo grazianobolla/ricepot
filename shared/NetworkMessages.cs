@@ -46,13 +46,13 @@ namespace NetMessage
     [MessagePackObject]
     public partial struct GameSnapshot : ICommand
     {
-        [Key(0)] public UserState[] States;
+        [Key(0)] public PlayerState[] States;
         [Key(1)] public int Time;
     }
 
     // Encapsulates current state for a player (gets sent with gameSnapshot)
     [MessagePackObject]
-    public partial struct UserState
+    public partial struct PlayerState
     {
         [Key(0)] public int Id;
         [Key(1)] public float[] PosArray;

@@ -1,0 +1,79 @@
+[gd_scene load_steps=12 format=3 uid="uid://c6q4umy6ajonl"]
+
+[ext_resource type="PackedScene" uid="uid://88lk1sfoga2g" path="res://models/Cookie/cookie.glb" id="1_6xixg"]
+[ext_resource type="Script" path="res://dummy/DummyPlayer.cs" id="2_bmpu6"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ca48p"]
+animation = &"Jump"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_efshh"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_21hck"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3re0x"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jsksi"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_dmwtm"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mqubg"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_8dbcb"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_21hck")
+blend_point_0/pos = Vector2(-1, 0)
+blend_point_1/node = SubResource("AnimationNodeAnimation_3re0x")
+blend_point_1/pos = Vector2(0, 1)
+blend_point_2/node = SubResource("AnimationNodeAnimation_jsksi")
+blend_point_2/pos = Vector2(1, 0)
+blend_point_3/node = SubResource("AnimationNodeAnimation_dmwtm")
+blend_point_3/pos = Vector2(0, -0.9)
+blend_point_4/node = SubResource("AnimationNodeAnimation_mqubg")
+blend_point_4/pos = Vector2(0, 0)
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_qdcbi"]
+graph_offset = Vector2(-517.774, -86.5425)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_ca48p")
+nodes/Animation/position = Vector2(-280, 180)
+nodes/FallBlend/node = SubResource("AnimationNodeBlend2_efshh")
+nodes/FallBlend/position = Vector2(40, 0)
+nodes/WalkSpace/node = SubResource("AnimationNodeBlendSpace2D_8dbcb")
+nodes/WalkSpace/position = Vector2(-300, 0)
+nodes/output/position = Vector2(380, 20)
+node_connections = [&"output", 0, &"FallBlend", &"FallBlend", 0, &"WalkSpace", &"FallBlend", 1, &"Animation"]
+
+[node name="CookieDummy" instance=ExtResource("1_6xixg")]
+script = ExtResource("2_bmpu6")
+_headTransformPath = NodePath("Model/Skeleton3D/Head")
+
+[node name="Model" parent="." index="0"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.228601, 0)
+
+[node name="Skeleton3D" parent="Model" index="0"]
+bones/1/rotation = Quaternion(-0.00550157, 0.00516792, -0.00254112, 0.999968)
+bones/2/rotation = Quaternion(-0.00996396, -0.0229297, 0.916862, -0.39842)
+bones/3/position = Vector3(0.11861, -0.0689246, -0.0318803)
+bones/3/rotation = Quaternion(-0.00762931, 0.678309, 0.734452, -0.0204578)
+bones/4/rotation = Quaternion(-0.0100701, 0.0231733, 0.916856, 0.398417)
+bones/5/position = Vector3(-0.118731, -0.117021, -0.0622437)
+bones/5/rotation = Quaternion(0.00692596, 0.702925, 0.710929, 0.0207032)
+
+[node name="Head" type="BoneAttachment3D" parent="Model/Skeleton3D" index="1"]
+transform = Transform3D(1, 4.05345e-16, 2.4155e-07, 2.46734e-14, 1, -1.03824e-07, -2.4155e-07, 1.03824e-07, 1, 9.58998e-17, 0.175882, 0.00944605)
+bone_name = "Head"
+bone_idx = 1
+override_pose = true
+
+[node name="AnimationPlayer" parent="." index="1"]
+autoplay = "Idle"
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2"]
+tree_root = SubResource("AnimationNodeBlendTree_qdcbi")
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/FallBlend/blend_amount = 0.0
+parameters/WalkSpace/blend_position = Vector2(0.1, 0)

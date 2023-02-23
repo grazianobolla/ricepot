@@ -40,6 +40,21 @@ public partial class ServerPlayer : CharacterBody3D
         }
     }
 
+    public NetMessage.PlayerState GetCurrentPlayerState()
+    {
+        var currentState = new NetMessage.PlayerState
+        {
+            Id = this.MultiplayerID,
+            PosArray = new float[3] { this.Position.X, this.Position.Y, this.Position.Z },
+            VelArray = new float[3] { this.Velocity.X, this.Velocity.Y, this.Velocity.Z },
+            LateralLookAngle = this.LateralLookAngle,
+            VerticalLookAngle = this.VerticalLookAngle,
+            Stamp = this.Stamp
+        };
+
+        return currentState;
+    }
+
     private void Move(NetMessage.UserInput userInput)
     {
         Stamp = userInput.Stamp;
