@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=3 uid="uid://dol3c0y37xm17"]
 
 [ext_resource type="Script" path="res://scripts/Init.gd" id="1_wmb7r"]
-[ext_resource type="PackedScene" path="res://debug/Box.tscn" id="2_qakgi"]
+[ext_resource type="PackedScene" uid="uid://b16empl8mppfp" path="res://debug/Box.tscn" id="2_qakgi"]
 [ext_resource type="Script" path="res://debug/debug_label.gd" id="2_uv7ob"]
 [ext_resource type="Material" uid="uid://bver7sw6yy1pu" path="res://addons/proto/dark/material_001.tres" id="3_3i078"]
 [ext_resource type="Script" path="res://shared/CustomSpawner.cs" id="3_tt4b3"]
